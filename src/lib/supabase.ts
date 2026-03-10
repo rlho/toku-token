@@ -14,3 +14,10 @@ export type TokuRecordRow = {
   longitude: number | null;
   created_at: string;
 };
+
+export type TokuLikeRow = {
+  id: string;
+  record_id: string;
+  anonymous_id: string;
+  created_at: string;
+};

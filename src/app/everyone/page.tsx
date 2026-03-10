@@ -11,11 +11,10 @@ import { useTokuStore } from "@/store/useTokuStore";
 export default function EveryonePage() {
   const { user } = usePrivy();
   const userId = user?.id;
-  const { records, loading } = useTokuStore(userId);
+  const { records, loading, toggleLike } = useTokuStore(userId);
 
   const publicRecords = records.filter((r) => !r.isPrivate);
 
-  // Simple stats
   const uniqueUsers = new Set(publicRecords.map((r) => r.userId)).size;
   const totalToku = publicRecords.length;
 
@@ -91,7 +90,7 @@ export default function EveryonePage() {
         ) : (
           <div className="flex flex-col gap-3">
             {publicRecords.map((record) => (
-              <TokuCard key={record.id} record={record} showUser />
+              <TokuCard key={record.id} record={record} showUser onLike={toggleLike} />
             ))}
           </div>
         )}

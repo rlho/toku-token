@@ -12,8 +12,8 @@ import { useTokuStore } from "@/store/useTokuStore";
 export default function HomePage() {
   const { ready, authenticated, login, user } = usePrivy();
   const userId = user?.id;
-  const { records, tokuCount, loading } = useTokuStore(userId);
-  const [activeTab, setActiveTab] = useState<"you" | "everyone">("you");
+  const { records, tokuCount, loading, toggleLike } = useTokuStore(userId);
+  const [activeTab, setActiveTab] = useState<"you" | "everyone">("everyone");
 
   const visibleRecords =
     activeTab === "you"
@@ -27,17 +27,6 @@ export default function HomePage() {
       {/* Tabs */}
       <div className="flex mx-4 mt-3 rounded-lg overflow-hidden border-2 border-border">
         <button
-          onClick={() => setActiveTab("you")}
-          className={`flex-1 py-2 text-xs text-center transition-colors ${
-            activeTab === "you"
-              ? "bg-foreground text-parchment font-bold"
-              : "bg-parchment text-muted"
-          }`}
-          style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
-        >
-          あなた
-        </button>
-        <button
           onClick={() => setActiveTab("everyone")}
           className={`flex-1 py-2 text-xs text-center transition-colors ${
             activeTab === "everyone"
@@ -48,14 +37,27 @@ export default function HomePage() {
         >
           みんな
         </button>
+        <button
+          onClick={() => setActiveTab("you")}
+          className={`flex-1 py-2 text-xs text-center transition-colors ${
+            activeTab === "you"
+              ? "bg-foreground text-parchment font-bold"
+              : "bg-parchment text-muted"
+          }`}
+          style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
+        >
+          あなた
+        </button>
       </div>
 
       {/* Content */}
-      <div className={`flex-1 px-4 pb-32 ${!authenticated ? "flex flex-col items-center justify-center" : "pt-4"}`}>
-        {!ready ? (
-          <p className="text-sm text-light text-center">読み込み中...</p>
-        ) : !authenticated ? (
-          <div className="text-center">
+      <div className="flex-1 px-4 pb-32 pt-4">
+        {!ready || loading ? (
+          <div className="flex justify-center mt-8">
+            <PixelCoin size={32} className="animate-spin" />
+          </div>
+        ) : activeTab === "you" && !authenticated ? (
+          <div className="text-center mt-12">
             <div className="mb-4">
               <PixelCoin size={64} className="mx-auto animate-coin-drop" />
             </div>
@@ -71,14 +73,10 @@ export default function HomePage() {
               接続する
             </button>
           </div>
-        ) : loading ? (
-          <div className="flex justify-center mt-8">
-            <PixelCoin size={32} className="animate-spin" />
-          </div>
         ) : (
           <div className="flex flex-col gap-3">
             {visibleRecords.map((record) => (
-              <TokuCard key={record.id} record={record} />
+              <TokuCard key={record.id} record={record} onLike={toggleLike} />
             ))}
             {visibleRecords.length === 0 && (
               <div className="text-center mt-12">
@@ -87,7 +85,7 @@ export default function HomePage() {
                   className="text-sm text-light"
                   style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
                 >
-                  まだ記録がありません
+                  {activeTab === "you" ? "まだ記録がありません" : "まだ誰もtokuを積んでいません"}
                 </p>
               </div>
             )}
