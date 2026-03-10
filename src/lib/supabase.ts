@@ -12,6 +12,7 @@ export type TokuRecordRow = {
   is_private: boolean;
   latitude: number | null;
   longitude: number | null;
+  image_url: string | null;
   created_at: string;
 };
 

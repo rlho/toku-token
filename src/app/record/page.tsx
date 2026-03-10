@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
+import Image from "next/image";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { PixelCoin } from "@/components/PixelCoin";
@@ -17,15 +18,33 @@ export default function RecordPage() {
   const [text, setText] = useState("");
   const [isPrivate, setIsPrivate] = useState(false);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    const reader = new FileReader();
+    reader.onload = () => setImagePreview(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
 
   const handleSubmit = async () => {
     if (!text.trim() || submitting) return;
     setSubmitting(true);
 
-    const ok = await addRecord(text.trim(), isPrivate, location ?? undefined);
+    const ok = await addRecord(text.trim(), isPrivate, location ?? undefined, imageFile ?? undefined);
     if (ok) {
       setSubmitted(true);
       setTimeout(() => router.push("/"), 2500);
@@ -38,10 +57,8 @@ export default function RecordPage() {
       <div className="flex flex-col min-h-screen bg-[#FFFEF2]">
         <Header />
         <div className="flex-1 flex flex-col items-center justify-center gap-6">
-          {/* Coin drop animation */}
           <div className="relative">
             <PixelCoin size={80} className="animate-coin-drop" />
-            {/* Sparkles */}
             <div className="absolute -top-2 -left-2 animate-sparkle" style={{ animationDelay: "0.2s" }}>
               <PixelFlower seed="sparkle1" size={12} />
             </div>
@@ -96,6 +113,52 @@ export default function RecordPage() {
 
         {ready && authenticated ? (
           <>
+            {/* Image upload */}
+            <div className="mt-4">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                className="hidden"
+              />
+              {imagePreview ? (
+                <div className="relative">
+                  <div className="rounded-lg overflow-hidden border-2 border-border" style={{ boxShadow: "3px 3px 0px #D4C8B8" }}>
+                    <Image
+                      src={imagePreview}
+                      alt="プレビュー"
+                      width={343}
+                      height={200}
+                      className="w-full h-40 object-cover"
+                    />
+                  </div>
+                  <button
+                    onClick={removeImage}
+                    className="absolute top-2 right-2 w-6 h-6 bg-foreground text-parchment rounded flex items-center justify-center text-xs"
+                    style={{ boxShadow: "2px 2px 0px #1a0d0d" }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-3 border-2 border-dashed border-border rounded-lg text-xs text-muted hover:bg-parchment transition-colors flex items-center justify-center gap-2"
+                >
+                  <svg width="16" height="16" viewBox="0 0 8 8" style={{ imageRendering: "pixelated" }}>
+                    <rect x="0" y="0" width="8" height="6" fill="none" stroke="#A89888" strokeWidth="0.5" />
+                    <rect x="1" y="2" width="2" height="2" fill="#A89888" />
+                    <rect x="3" y="3" width="1" height="1" fill="#A89888" />
+                    <rect x="4" y="2" width="1" height="2" fill="#A89888" />
+                    <rect x="5" y="1" width="1" height="3" fill="#A89888" />
+                    <rect x="6" y="2" width="1" height="2" fill="#A89888" />
+                  </svg>
+                  画像を追加
+                </button>
+              )}
+            </div>
+
             <label className="flex items-center gap-2 mt-4 cursor-pointer">
               <input
                 type="checkbox"

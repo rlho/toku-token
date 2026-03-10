@@ -12,6 +12,7 @@ export type TokuRecord = {
   isPrivate: boolean;
   latitude: number | null;
   longitude: number | null;
+  imageUrl: string | null;
   likeCount: number;
   likedByMe: boolean;
 };
@@ -27,6 +28,7 @@ function rowToRecord(row: TokuRecordRow, likeCount: number, likedByMe: boolean):
     isPrivate: row.is_private,
     latitude: row.latitude,
     longitude: row.longitude,
+    imageUrl: row.image_url,
     likeCount,
     likedByMe,
   };
@@ -88,8 +90,23 @@ export function useTokuStore(userId?: string) {
   }, [fetchRecords, fetchTokuCount]);
 
   const addRecord = useCallback(
-    async (text: string, isPrivate: boolean, location?: { lat: number; lng: number }) => {
+    async (text: string, isPrivate: boolean, location?: { lat: number; lng: number }, imageFile?: File) => {
       if (!userId) return false;
+
+      let imageUrl: string | null = null;
+      if (imageFile) {
+        const ext = imageFile.name.split(".").pop() || "jpg";
+        const path = `${userId}/${Date.now()}.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from("toku-images")
+          .upload(path, imageFile);
+        if (!uploadError) {
+          const { data: urlData } = supabase.storage
+            .from("toku-images")
+            .getPublicUrl(path);
+          imageUrl = urlData.publicUrl;
+        }
+      }
 
       const { error } = await supabase.from("toku_records").insert({
         user_id: userId,
@@ -97,6 +114,7 @@ export function useTokuStore(userId?: string) {
         is_private: isPrivate,
         latitude: location?.lat ?? null,
         longitude: location?.lng ?? null,
+        image_url: imageUrl,
       });
 
       if (!error) {

@@ -50,18 +50,6 @@ export default function EveryonePage() {
           </div>
           <div className="w-px h-8 bg-parchment opacity-20" />
           <div className="text-center">
-            <span
-              className="text-2xl font-bold"
-              style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
-            >
-              {uniqueUsers}
-            </span>
-            <p className="text-[10px] opacity-60" style={{ fontFamily: "var(--font-dot-gothic), monospace" }}>
-              tokuを積む人
-            </p>
-          </div>
-          <div className="w-px h-8 bg-parchment opacity-20" />
-          <div className="text-center">
             <div className="flex items-center justify-center gap-0.5 mb-1">
               {[0, 1, 2].map((i) => (
                 <PixelFlower key={i} seed={`stat-${i}`} size={14} />
