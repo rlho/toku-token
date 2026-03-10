@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { PixelFlower } from "./PixelFlower";
 import { PixelCoin } from "./PixelCoin";
@@ -14,8 +15,13 @@ export function TokuCard({
   showUser?: boolean;
   onLike?: (recordId: string) => void;
 }) {
+  const router = useRouter();
+
   return (
-    <div className="card-parchment rounded-lg p-4">
+    <div
+      className="card-parchment rounded-lg p-4 cursor-pointer hover:brightness-[0.98] transition-all"
+      onClick={() => router.push(`/toku/${record.id}`)}
+    >
       <div className="flex items-start gap-3">
         <div className="w-12 h-12 rounded bg-parchment-dark flex items-center justify-center shrink-0 border border-border">
           <PixelFlower seed={record.id} size={28} />
@@ -47,7 +53,7 @@ export function TokuCard({
           </div>
           {onLike && (
             <button
-              onClick={() => onLike(record.id)}
+              onClick={(e) => { e.stopPropagation(); onLike(record.id); }}
               className="flex items-center gap-1 group"
             >
               <svg
