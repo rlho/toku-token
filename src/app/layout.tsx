@@ -15,6 +15,8 @@ const dotGothic = DotGothic16({
   variable: "--font-dot-gothic",
 });
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Toku Token",
   description: "tokuを積んで、花を咲かせよう",
