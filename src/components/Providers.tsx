@@ -1,6 +1,7 @@
 "use client";
 
 import { PrivyProvider } from "@privy-io/react-auth";
+import { I18nProvider } from "@/lib/i18n";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
@@ -10,23 +11,25 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <PrivyProvider
-      appId={appId}
-      config={{
-        loginMethods: ["email", "google", "wallet"],
-        appearance: {
-          theme: "light",
-          accentColor: "#000000",
-          logo: undefined,
-        },
-        embeddedWallets: {
-          ethereum: {
-            createOnLogin: "users-without-wallets",
+    <I18nProvider>
+      <PrivyProvider
+        appId={appId}
+        config={{
+          loginMethods: ["email", "google", "wallet"],
+          appearance: {
+            theme: "light",
+            accentColor: "#000000",
+            logo: undefined,
           },
-        },
-      }}
-    >
-      {children}
-    </PrivyProvider>
+          embeddedWallets: {
+            ethereum: {
+              createOnLogin: "users-without-wallets",
+            },
+          },
+        }}
+      >
+        {children}
+      </PrivyProvider>
+    </I18nProvider>
   );
 }

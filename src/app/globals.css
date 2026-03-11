@@ -93,3 +93,22 @@ body {
 .animate-sparkle {
   animation: sparkle 1.5s ease-in-out infinite;
 }
+
+/* Lotus bloom animation */
+@keyframes lotusBloom {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  40% { opacity: 1; }
+  70% { transform: translate(-50%, -50%) scale(1.15); }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* Water ripple animation */
+@keyframes ripple {
+  0% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.1; }
+  100% { opacity: 0.3; transform: scale(1.05); }
+}
+
+.animate-ripple {
+  animation: ripple 3s ease-in-out infinite;
+}

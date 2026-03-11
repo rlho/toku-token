@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
+import { useI18n } from "@/lib/i18n";
 
 const MapComponent = dynamic(() => import("./MapComponent"), { ssr: false });
 
@@ -13,6 +14,7 @@ type Props = {
 };
 
 export function LocationPicker({ value, onChange }: Props) {
+  const { t } = useI18n();
   const [mode, setMode] = useState<"none" | "current" | "pick">("none");
   const [loading, setLoading] = useState(false);
 
@@ -26,10 +28,10 @@ export function LocationPicker({ value, onChange }: Props) {
       },
       () => {
         setLoading(false);
-        alert("位置情報を取得できませんでした");
+        alert(t("location.error"));
       }
     );
-  }, [onChange]);
+  }, [onChange, t]);
 
   const handleModeChange = (newMode: "none" | "current" | "pick") => {
     if (newMode === "none") {
@@ -39,7 +41,6 @@ export function LocationPicker({ value, onChange }: Props) {
       getCurrentLocation();
     } else {
       setMode("pick");
-      // Default to Tokyo if no location yet
       if (!value) {
         onChange({ lat: 35.6762, lng: 139.6503 });
       }
@@ -48,7 +49,7 @@ export function LocationPicker({ value, onChange }: Props) {
 
   return (
     <div className="mt-4">
-      <p className="text-sm text-muted mb-2">位置情報</p>
+      <p className="text-sm text-muted mb-2">{t("location.label")}</p>
       <div className="flex gap-2">
         <button
           type="button"
@@ -57,7 +58,7 @@ export function LocationPicker({ value, onChange }: Props) {
             mode === "none" ? "bg-foreground text-white border-foreground" : "border-border hover:bg-surface"
           }`}
         >
-          なし
+          {t("location.none")}
         </button>
         <button
           type="button"
@@ -66,7 +67,7 @@ export function LocationPicker({ value, onChange }: Props) {
             mode === "current" ? "bg-foreground text-white border-foreground" : "border-border hover:bg-surface"
           }`}
         >
-          {loading ? "取得中..." : "現在地"}
+          {loading ? t("location.fetching") : t("location.current")}
         </button>
         <button
           type="button"
@@ -75,7 +76,7 @@ export function LocationPicker({ value, onChange }: Props) {
             mode === "pick" ? "bg-foreground text-white border-foreground" : "border-border hover:bg-surface"
           }`}
         >
-          地図から選ぶ
+          {t("location.pick")}
         </button>
       </div>
 

@@ -10,9 +10,11 @@ import { PixelCoin } from "@/components/PixelCoin";
 import { PixelFlower } from "@/components/PixelFlower";
 import { LocationPicker } from "@/components/LocationPicker";
 import { useTokuStore } from "@/store/useTokuStore";
+import { useI18n } from "@/lib/i18n";
 
 export default function RecordPage() {
   const { ready, authenticated, login, user } = usePrivy();
+  const { t } = useI18n();
   const userId = user?.id;
   const { addRecord } = useTokuStore(userId);
   const [text, setText] = useState("");
@@ -24,6 +26,8 @@ export default function RecordPage() {
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
+  const walletAddress = user?.wallet?.address;
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -39,8 +43,6 @@ export default function RecordPage() {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
-
-  const walletAddress = user?.wallet?.address;
 
   const handleSubmit = async () => {
     if (!text.trim() || submitting) return;
@@ -75,7 +77,7 @@ export default function RecordPage() {
             className="text-lg text-foreground animate-level-up"
             style={{ fontFamily: "var(--font-dot-gothic), monospace", animationDelay: "0.3s" }}
           >
-            tokuが溜まりました！
+            {t("record.success")}
           </p>
           <p
             className="text-xs text-accent animate-level-up"
@@ -108,7 +110,7 @@ export default function RecordPage() {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="今日のちょっといいこと教えて..."
+          placeholder={t("record.placeholder")}
           className="w-full h-28 border-2 border-border bg-parchment rounded-lg p-4 text-sm resize-none focus:outline-none focus:border-foreground placeholder:text-light"
           style={{ boxShadow: "3px 3px 0px #D4C8B8" }}
         />
@@ -129,7 +131,7 @@ export default function RecordPage() {
                   <div className="rounded-lg overflow-hidden border-2 border-border" style={{ boxShadow: "3px 3px 0px #D4C8B8" }}>
                     <Image
                       src={imagePreview}
-                      alt="プレビュー"
+                      alt=""
                       width={343}
                       height={200}
                       className="w-full h-40 object-cover"
@@ -156,7 +158,7 @@ export default function RecordPage() {
                     <rect x="5" y="1" width="1" height="3" fill="#A89888" />
                     <rect x="6" y="2" width="1" height="2" fill="#A89888" />
                   </svg>
-                  画像を追加
+                  {t("record.addImage")}
                 </button>
               )}
             </div>
@@ -168,7 +170,7 @@ export default function RecordPage() {
                 onChange={(e) => setIsPrivate(e.target.checked)}
                 className="w-4 h-4 rounded accent-foreground"
               />
-              <span className="text-xs text-muted">みんなのタイムラインに表示しない</span>
+              <span className="text-xs text-muted">{t("record.private")}</span>
             </label>
 
             <LocationPicker value={location} onChange={setLocation} />
@@ -179,17 +181,17 @@ export default function RecordPage() {
                 disabled={!text.trim() || submitting}
                 className="btn-pixel text-sm rounded px-8 py-2.5 disabled:opacity-30"
               >
-                {submitting ? "記録中..." : "tokuを積む"}
+                {submitting ? t("record.submitting") : t("record.submit")}
               </button>
             </div>
           </>
         ) : (
           <div className="text-center mt-8">
             <p className="text-sm text-muted" style={{ fontFamily: "var(--font-dot-gothic), monospace" }}>
-              接続して記録を保存しよう
+              {t("record.connect.message")}
             </p>
             <button onClick={login} disabled={!ready} className="btn-pixel text-sm rounded px-6 py-2 mt-4">
-              接続する
+              {t("record.connect.button")}
             </button>
           </div>
         )}

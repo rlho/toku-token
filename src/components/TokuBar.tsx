@@ -1,8 +1,10 @@
 "use client";
 
 import { PixelCoin } from "./PixelCoin";
+import { useI18n } from "@/lib/i18n";
 
 export function TokuBar({ tokuCount }: { tokuCount: number }) {
+  const { t } = useI18n();
   if (tokuCount === 0) return null;
 
   return (
@@ -14,7 +16,7 @@ export function TokuBar({ tokuCount }: { tokuCount: number }) {
         className="text-xs text-parchment"
         style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
       >
-        あなたのtoku
+        {t("tokubar.label")}
       </span>
       <div className="flex items-center gap-2">
         <PixelCoin size={20} />

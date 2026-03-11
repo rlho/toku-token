@@ -8,9 +8,11 @@ import { TokuBar } from "@/components/TokuBar";
 import { TokuCard } from "@/components/TokuCard";
 import { PixelCoin } from "@/components/PixelCoin";
 import { useTokuStore } from "@/store/useTokuStore";
+import { useI18n } from "@/lib/i18n";
 
 export default function HomePage() {
   const { ready, authenticated, login, user } = usePrivy();
+  const { t } = useI18n();
   const userId = user?.id;
   const { records, tokuCount, loading, toggleLike } = useTokuStore(userId);
   const [activeTab, setActiveTab] = useState<"you" | "everyone">("everyone");
@@ -35,7 +37,7 @@ export default function HomePage() {
           }`}
           style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
         >
-          みんな
+          {t("home.tab.everyone")}
         </button>
         <button
           onClick={() => setActiveTab("you")}
@@ -46,7 +48,7 @@ export default function HomePage() {
           }`}
           style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
         >
-          あなた
+          {t("home.tab.you")}
         </button>
       </div>
 
@@ -62,15 +64,13 @@ export default function HomePage() {
               <PixelCoin size={64} className="mx-auto animate-coin-drop" />
             </div>
             <p
-              className="text-sm text-muted leading-relaxed mb-4"
+              className="text-sm text-muted leading-relaxed mb-4 whitespace-pre-line"
               style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
             >
-              接続して
-              <br />
-              tokuを積み始めよう
+              {t("home.connect.message")}
             </p>
             <button onClick={login} className="btn-pixel text-sm rounded px-6 py-2">
-              接続する
+              {t("home.connect.button")}
             </button>
           </div>
         ) : (
@@ -85,7 +85,7 @@ export default function HomePage() {
                   className="text-sm text-light"
                   style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
                 >
-                  {activeTab === "you" ? "まだ記録がありません" : "まだ誰もtokuを積んでいません"}
+                  {activeTab === "you" ? t("home.empty.you") : t("home.empty.everyone")}
                 </p>
               </div>
             )}

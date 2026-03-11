@@ -9,11 +9,13 @@ import { BottomNav } from "@/components/BottomNav";
 import { PixelCoin } from "@/components/PixelCoin";
 import { PixelFlower } from "@/components/PixelFlower";
 import { useTokuStore } from "@/store/useTokuStore";
+import { useI18n } from "@/lib/i18n";
 
 export default function TokuDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const { user } = usePrivy();
+  const { t } = useI18n();
   const userId = user?.id;
   const { records, loading, toggleLike } = useTokuStore(userId);
 
@@ -40,7 +42,7 @@ export default function TokuDetailPage({ params }: { params: Promise<{ id: strin
             <rect x="3" y="6" width="1" height="1" fill="currentColor" />
             <rect x="1" y="3" width="6" height="1" fill="currentColor" />
           </svg>
-          もどる
+          {t("detail.back")}
         </button>
 
         {loading ? (
@@ -51,7 +53,7 @@ export default function TokuDetailPage({ params }: { params: Promise<{ id: strin
           <div className="text-center mt-12">
             <PixelCoin size={48} className="mx-auto mb-3 opacity-30" />
             <p className="text-sm text-light" style={{ fontFamily: "var(--font-dot-gothic), monospace" }}>
-              記録が見つかりません
+              {t("detail.notFound")}
             </p>
           </div>
         ) : (

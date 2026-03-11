@@ -7,15 +7,15 @@ import { TokuCard } from "@/components/TokuCard";
 import { PixelCoin } from "@/components/PixelCoin";
 import { PixelFlower } from "@/components/PixelFlower";
 import { useTokuStore } from "@/store/useTokuStore";
+import { useI18n } from "@/lib/i18n";
 
 export default function EveryonePage() {
   const { user } = usePrivy();
+  const { t } = useI18n();
   const userId = user?.id;
   const { records, loading, toggleLike } = useTokuStore(userId);
 
   const publicRecords = records.filter((r) => !r.isPrivate);
-
-  const uniqueUsers = new Set(publicRecords.map((r) => r.userId)).size;
   const totalToku = publicRecords.length;
 
   return (
@@ -31,7 +31,7 @@ export default function EveryonePage() {
           className="text-xs mb-3 opacity-70"
           style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
         >
-          みんなのtoku
+          {t("everyone.title")}
         </p>
         <div className="flex items-center justify-around">
           <div className="text-center">
@@ -45,7 +45,7 @@ export default function EveryonePage() {
               </span>
             </div>
             <p className="text-[10px] opacity-60" style={{ fontFamily: "var(--font-dot-gothic), monospace" }}>
-              トータルtoku
+              {t("everyone.total")}
             </p>
           </div>
           <div className="w-px h-8 bg-parchment opacity-20" />
@@ -56,7 +56,7 @@ export default function EveryonePage() {
               ))}
             </div>
             <p className="text-[10px] opacity-60" style={{ fontFamily: "var(--font-dot-gothic), monospace" }}>
-              咲いた花
+              {t("everyone.flowers")}
             </p>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function EveryonePage() {
           <div className="text-center mt-12">
             <PixelCoin size={48} className="mx-auto mb-3 opacity-30" />
             <p className="text-sm text-light" style={{ fontFamily: "var(--font-dot-gothic), monospace" }}>
-              まだ誰もtokuを積んでいません
+              {t("everyone.empty")}
             </p>
           </div>
         ) : (

@@ -2,10 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 
-const navItems = [
+type NavItem = {
+  labelKey: "nav.home" | "nav.record" | "nav.everyone" | "nav.garden";
+  href: string;
+  icon: (active: boolean) => React.ReactNode;
+};
+
+const navItems: NavItem[] = [
   {
-    label: "ホーム",
+    labelKey: "nav.home",
     href: "/",
     icon: (active: boolean) => (
       <svg width="20" height="20" viewBox="0 0 8 8" style={{ imageRendering: "pixelated" as const }}>
@@ -19,7 +26,7 @@ const navItems = [
     ),
   },
   {
-    label: "記録",
+    labelKey: "nav.record",
     href: "/record",
     icon: (active: boolean) => (
       <svg width="20" height="20" viewBox="0 0 8 8" style={{ imageRendering: "pixelated" as const }}>
@@ -34,7 +41,7 @@ const navItems = [
     ),
   },
   {
-    label: "みんな",
+    labelKey: "nav.everyone",
     href: "/everyone",
     icon: (active: boolean) => (
       <svg width="20" height="20" viewBox="0 0 8 8" style={{ imageRendering: "pixelated" as const }}>
@@ -48,10 +55,24 @@ const navItems = [
       </svg>
     ),
   },
+  {
+    labelKey: "nav.garden",
+    href: "/profile",
+    icon: (active: boolean) => (
+      <svg width="20" height="20" viewBox="0 0 8 8" style={{ imageRendering: "pixelated" as const }}>
+        <rect x="3" y="0" width="2" height="1" fill={active ? "#4A7C59" : "#A89888"} />
+        <rect x="2" y="1" width="4" height="1" fill={active ? "#4A7C59" : "#A89888"} />
+        <rect x="1" y="2" width="6" height="2" fill={active ? "#4A7C59" : "#A89888"} />
+        <rect x="3" y="4" width="2" height="2" fill={active ? "#3B1C1C" : "#A89888"} />
+        <rect x="0" y="6" width="8" height="2" fill={active ? "#D4C8B8" : "#D4C8B8"} />
+      </svg>
+    ),
+  },
 ];
 
 export function BottomNav() {
   const pathname = usePathname();
+  const { t } = useI18n();
 
   return (
     <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[375px] bg-[#FFFEF2] border-t-2 border-border">
@@ -60,7 +81,7 @@ export function BottomNav() {
           const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return (
             <Link
-              key={item.label}
+              key={item.labelKey}
               href={item.href}
               className="flex flex-col items-center gap-1 py-1 px-4"
             >
@@ -69,7 +90,7 @@ export function BottomNav() {
                 className={`text-[10px] ${active ? "text-foreground font-bold" : "text-light"}`}
                 style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
               >
-                {item.label}
+                {t(item.labelKey)}
               </span>
             </Link>
           );
