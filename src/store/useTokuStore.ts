@@ -90,7 +90,7 @@ export function useTokuStore(userId?: string) {
   }, [fetchRecords, fetchTokuCount]);
 
   const addRecord = useCallback(
-    async (text: string, isPrivate: boolean, location?: { lat: number; lng: number }, imageFile?: File) => {
+    async (text: string, isPrivate: boolean, location?: { lat: number; lng: number }, imageFile?: File, walletAddress?: string) => {
       if (!userId) return false;
 
       let imageUrl: string | null = null;
@@ -118,6 +118,19 @@ export function useTokuStore(userId?: string) {
       });
 
       if (!error) {
+        // Mint SBT if wallet address is available
+        if (walletAddress) {
+          try {
+            await fetch("/api/mint", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ walletAddress }),
+            });
+          } catch (e) {
+            console.error("SBT mint failed:", e);
+          }
+        }
+
         await fetchRecords();
         await fetchTokuCount();
         return true;

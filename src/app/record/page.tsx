@@ -40,11 +40,13 @@ export default function RecordPage() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const walletAddress = user?.wallet?.address;
+
   const handleSubmit = async () => {
     if (!text.trim() || submitting) return;
     setSubmitting(true);
 
-    const ok = await addRecord(text.trim(), isPrivate, location ?? undefined, imageFile ?? undefined);
+    const ok = await addRecord(text.trim(), isPrivate, location ?? undefined, imageFile ?? undefined, walletAddress);
     if (ok) {
       setSubmitted(true);
       setTimeout(() => router.push("/"), 2500);
