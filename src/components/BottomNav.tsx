@@ -55,19 +55,6 @@ const navItems: NavItem[] = [
       </svg>
     ),
   },
-  {
-    labelKey: "nav.garden",
-    href: "/profile",
-    icon: (active: boolean) => (
-      <svg width="20" height="20" viewBox="0 0 8 8" style={{ imageRendering: "pixelated" as const }}>
-        <rect x="3" y="0" width="2" height="1" fill={active ? "#4A7C59" : "#A89888"} />
-        <rect x="2" y="1" width="4" height="1" fill={active ? "#4A7C59" : "#A89888"} />
-        <rect x="1" y="2" width="6" height="2" fill={active ? "#4A7C59" : "#A89888"} />
-        <rect x="3" y="4" width="2" height="2" fill={active ? "#3B1C1C" : "#A89888"} />
-        <rect x="0" y="6" width="8" height="2" fill={active ? "#D4C8B8" : "#D4C8B8"} />
-      </svg>
-    ),
-  },
 ];
 
 export function BottomNav() {
