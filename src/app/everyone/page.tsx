@@ -1,65 +1,45 @@
 "use client";
 
+import { useMemo } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { TokuCard } from "@/components/TokuCard";
 import { PixelCoin } from "@/components/PixelCoin";
-import { PixelFlower } from "@/components/PixelFlower";
 import { useTokuStore } from "@/store/useTokuStore";
 import { useI18n } from "@/lib/i18n";
+import { getRandomQuote } from "@/lib/buddhaQuotes";
 
 export default function EveryonePage() {
   const { user } = usePrivy();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const userId = user?.id;
   const { records, loading, toggleLike } = useTokuStore(userId);
 
   const publicRecords = records.filter((r) => !r.isPrivate);
-  const totalToku = publicRecords.length;
+  const quote = useMemo(() => getRandomQuote(locale), [locale]);
 
   return (
     <div className="flex flex-col min-h-screen bg-[#FFFEF2]">
       <Header />
 
-      {/* Stats banner */}
+      {/* Buddha quote banner */}
       <div
         className="mx-4 mt-3 p-4 rounded-lg bg-foreground text-parchment"
         style={{ boxShadow: "3px 3px 0px #1a0d0d" }}
       >
         <p
-          className="text-xs mb-3 opacity-70"
+          className="text-xs leading-relaxed text-center opacity-90"
           style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
         >
-          {t("everyone.title")}
+          &ldquo;{quote}&rdquo;
         </p>
-        <div className="flex items-center justify-around">
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <PixelCoin size={20} />
-              <span
-                className="text-2xl text-accent-bright font-bold"
-                style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
-              >
-                {totalToku}
-              </span>
-            </div>
-            <p className="text-[10px] opacity-60" style={{ fontFamily: "var(--font-dot-gothic), monospace" }}>
-              {t("everyone.total")}
-            </p>
-          </div>
-          <div className="w-px h-8 bg-parchment opacity-20" />
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-0.5 mb-1">
-              {[0, 1, 2].map((i) => (
-                <PixelFlower key={i} seed={`stat-${i}`} size={14} />
-              ))}
-            </div>
-            <p className="text-[10px] opacity-60" style={{ fontFamily: "var(--font-dot-gothic), monospace" }}>
-              {t("everyone.flowers")}
-            </p>
-          </div>
-        </div>
+        <p
+          className="text-[10px] text-center mt-2 opacity-50"
+          style={{ fontFamily: "var(--font-dot-gothic), monospace" }}
+        >
+          — {locale === "ja" ? "釈迦" : "Buddha"}
+        </p>
       </div>
 
       {/* Feed */}
