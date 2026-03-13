@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <head>
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
       </head>
       <body className={`${notoSansJP.variable} ${dotGothic.variable} antialiased`} style={{ fontFamily: "var(--font-noto-sans-jp), sans-serif" }}>
         <Providers>

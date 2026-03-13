@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import webpush from "web-push";
 import { supabase } from "@/lib/supabase";
+import { getDailyMessage } from "@/lib/notificationMessages";
 
 webpush.setVapidDetails(
   "mailto:rihohearts@gmail.com",
@@ -24,8 +25,8 @@ export async function GET(req: NextRequest) {
   }
 
   const payload = JSON.stringify({
-    title: "Toku Token",
-    body: "今日はどんな徳を積んだ？簡単なことでもいいから記録しよう 🪷",
+    title: "Toku Token 🪷",
+    body: getDailyMessage("ja"),
     url: "/record",
   });
 
